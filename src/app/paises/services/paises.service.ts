@@ -18,13 +18,13 @@ export class PaisesService {
     return this.http.get<PaisSmall[]>(url)
   }
 
-  getPaisePorCodigo(codigo: string): Observable<Pais | null> {
+  getPaisePorCodigo(codigo: string): Observable<Pais[] | null> {
     if (!codigo) {
       return of(null)
     }
 
     const url = `${this._baseUrl}/alpha/${codigo}`;
-    return this.http.get<Pais>(url)
+    return this.http.get<Pais[]>(url)
   }
 
   constructor(private http: HttpClient) { }

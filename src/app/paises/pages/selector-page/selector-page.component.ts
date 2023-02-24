@@ -21,6 +21,7 @@ export class SelectorPageComponent implements OnInit {
   // llenar selectores
   regiones: string[] = [];
   paises: PaisSmall[] = [];
+  fronteras: string[] = [];
 
   guardar() { };
 
@@ -37,7 +38,16 @@ export class SelectorPageComponent implements OnInit {
 
     // cuando cambia el pais
     this.miFormulario.get('pais')?.valueChanges
-      .subscribe(codigo => console.log(codigo))
+      .pipe(
+        tap(() => {
+          this.fronteras = [];
+          this.miFormulario.get('fronteras')?.reset('')
+        }),
+        switchMap(codigo => this.paisesServices.getPaisePorCodigo(codigo))
+      )
+      .subscribe((pais) => {
+        this.fronteras = pais && pais[0].borders || [];
+      })
 
 
 
