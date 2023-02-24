@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PaisesService } from '../../services/paises.service';
+import { PaisSmall } from '../../interfaces/paises.interface';
 
 @Component({
   selector: 'app-selector-page',
@@ -7,16 +9,36 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styles: [
   ]
 })
-export class SelectorPageComponent {
+export class SelectorPageComponent implements OnInit {
 
   miFormulario: FormGroup = this.fb.group({
-    region:['', Validators.required]
-  })
+    region: ['', Validators.required],
+    pais: ['', Validators.required],
+  });
+
+  // llenar selectores
+  regiones: string[] = [];
+  paises: PaisSmall[] = [];
+
+  guardar() { };
+
+  ngOnInit(): void {
+    this.regiones = this.paisesServices.regiones;
+
+    // cuando cambie la region
+    this.miFormulario.get('region')?.valueChanges
+      .subscribe(region => {
+        this.paisesServices.getPaisesPorRegion(region)
+          .subscribe(paises => {
+            console.log(paises)
+            this.paises = paises
+          })
+      })
+  }
 
 
-  guardar() { }
-
-
-
-  constructor(private fb: FormBuilder) { };
+  constructor(
+    private fb: FormBuilder,
+    private paisesServices: PaisesService,
+  ) { };
 }
